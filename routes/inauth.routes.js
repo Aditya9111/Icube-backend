@@ -1,6 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const User = require("../models/user.model");
+const Investor = require("../models/investor.model");
 const generateAuthToken = require("../utils/generateAuthToken");
 const verifyAuthentication = require("../middlewares/auth.middleware");
 const router = express.Router();
@@ -8,13 +8,13 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   try {
     const { email } = req.body;
-    const foundUser = await User.findOne({ email });
+    const foundUser = await Investor.findOne({ email });
     if (foundUser) {
       return res.status(400).json({
         message: "User with this email already exists.",
       });
     } else {
-      const user = await new User(req.body);
+      const user = await new Investor(req.body);
       const salt = await bcrypt.genSalt(10);
 
       user.password = await bcrypt.hash(user.password, salt);
@@ -26,7 +26,7 @@ router.post("/register", async (req, res) => {
         message: "User created successfully.",
         response: {
           name: user.name,
-          startupName: user.startupName,
+          organisation: user.organisation,
           token,
         },
       });
@@ -41,7 +41,7 @@ router.post("/register", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await Investor.findById(req.params.id);
     if (user.username === req.body.username) {
       try {
         const updatedUser = await User.findByIdAndUpdate(
@@ -63,21 +63,11 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
-  try {
-    const user = await User.find({ domain: req.params.id });
-
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const foundUser = await User.findOne({ email });
+    const foundUser = await Investor.findOne({ email });
     if (!foundUser) {
       return res.status(403).json({
         message: "Incorrect email or password!",
@@ -98,7 +88,8 @@ router.post("/login", async (req, res) => {
           token,
           name: foundUser.name,
           email: foundUser.email,
-          startupName: foundUser.startupName,
+          organisation: foundUser.organisation,
+          isInvestor: foundUser.isInvestor,
         },
       });
     }

@@ -6,6 +6,7 @@ const postRoute = require("./routes/blog.routes");
 const jobRoute = require("./routes/job.routes");
 const mentorRoute = require("./routes/mentor.routes");
 const auctionRoute = require("./routes/auction.routes");
+const investorRoute = require("./routes/inauth.routes");
 const verifyAuthentication = require("./middlewares/auth.middleware");
 
 const app = express();
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", auth);
+app.use("/invauth", investorRoute);
 app.use("/api/blogs", postRoute);
 app.use("/api/jobs", jobRoute);
 app.use("/api/mentor", mentorRoute);

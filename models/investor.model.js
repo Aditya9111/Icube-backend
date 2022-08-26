@@ -2,16 +2,15 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
-const userSchema = new Schema({
+const investorSchema = new Schema({
   email: {
     type: String,
     required: true,
     unique: true,
   },
-  startupName: {
+  organisation: {
     type: String,
     required: true,
-    unique: true,
   },
   name: {
     type: String,
@@ -25,20 +24,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  isUser: {
+  isInvestor: {
     type: Boolean,
     required: true,
     default: true,
   },
-  isVerified: {
-    type: Boolean,
-    required: true,
-    default: false,
-  },
-  domain: {
-    type: String,
-    required: false,
-  },
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("Investor", investorSchema);
